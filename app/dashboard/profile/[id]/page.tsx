@@ -56,18 +56,18 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div className="profile-header">
         {isEditing ? (
-          <div className="flex items-center gap-4">
+          <div className="profile-edit-group">
             <input
               type="text"
               value={profileName}
               onChange={(e) => setProfileName(e.target.value)}
-              className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white"
+              className="profile-input"
             />
             <button
               onClick={handleSave}
-              className="px-4 py-2 bg-white/10 rounded hover:bg-white/20"
+              className="profile-button"
             >
               Save
             </button>
@@ -76,17 +76,17 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
                 setIsEditing(false)
                 setProfileName(profile.name)
               }}
-              className="px-4 py-2 bg-white/10 rounded hover:bg-white/20"
+              className="profile-button"
             >
               Cancel
             </button>
           </div>
         ) : (
-          <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold">{profile.name}</h1>
+          <div className="profile-edit-group">
+            <h1 className="profile-title">{profile.name}</h1>
             <button
               onClick={() => setIsEditing(true)}
-              className="px-4 py-2 bg-white/10 rounded hover:bg-white/20"
+              className="profile-button"
             >
               Edit Name
             </button>
@@ -94,40 +94,38 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
         )}
       </div>
       
-      <div className="space-y-6">
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Profile Information</h2>
-          <div className="p-6 bg-white/5 rounded-lg">
-            <pre className="whitespace-pre-wrap">
-              {JSON.stringify(profile.data, null, 2)}
-            </pre>
-          </div>
-        </section>
+      <div className="profile-section">
+        <h2 className="profile-section-title">Profile Information</h2>
+        <div className="profile-card">
+          <pre className="whitespace-pre-wrap">
+            {JSON.stringify(profile.data, null, 2)}
+          </pre>
+        </div>
+      </div>
 
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
-          <div className="p-6 bg-white/5 rounded-lg">
-            <p className="text-white/70">No recent activity</p>
-          </div>
-        </section>
+      <div className="profile-section">
+        <h2 className="profile-section-title">Recent Activity</h2>
+        <div className="profile-card">
+          <p className="text-white/70">No recent activity</p>
+        </div>
+      </div>
 
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Statistics</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-6 bg-white/5 rounded-lg">
-              <h3 className="font-medium mb-2">Stories</h3>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-            <div className="p-6 bg-white/5 rounded-lg">
-              <h3 className="font-medium mb-2">Comments</h3>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-            <div className="p-6 bg-white/5 rounded-lg">
-              <h3 className="font-medium mb-2">Likes</h3>
-              <p className="text-2xl font-bold">0</p>
-            </div>
+      <div className="profile-section">
+        <h2 className="profile-section-title">Statistics</h2>
+        <div className="profile-stats">
+          <div className="profile-stat-card">
+            <h3 className="profile-stat-label">Stories</h3>
+            <p className="profile-stat-value">0</p>
           </div>
-        </section>
+          <div className="profile-stat-card">
+            <h3 className="profile-stat-label">Comments</h3>
+            <p className="profile-stat-value">0</p>
+          </div>
+          <div className="profile-stat-card">
+            <h3 className="profile-stat-label">Likes</h3>
+            <p className="profile-stat-value">0</p>
+          </div>
+        </div>
       </div>
     </div>
   )

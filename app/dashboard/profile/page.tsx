@@ -32,7 +32,7 @@ export default function ProfilePage() {
   if (profiles.length === 0) {
     return (
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Welcome to Profiles</h1>
+        <h1 className="profile-title mb-4">Welcome to Profiles</h1>
         <p className="text-white/70 mb-8">
           You haven't created any profiles yet. Create your first profile to get started.
         </p>
@@ -45,42 +45,40 @@ export default function ProfilePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-8">{defaultProfile.name}</h1>
+      <h1 className="profile-title mb-8">{defaultProfile.name}</h1>
       
-      <div className="space-y-6">
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Profile Information</h2>
-          <div className="p-6 bg-white/5 rounded-lg">
-            <pre className="whitespace-pre-wrap">
-              {JSON.stringify(defaultProfile.data, null, 2)}
-            </pre>
-          </div>
-        </section>
+      <div className="profile-section">
+        <h2 className="profile-section-title">Profile Information</h2>
+        <div className="profile-card">
+          <pre className="whitespace-pre-wrap">
+            {JSON.stringify(defaultProfile.data, null, 2)}
+          </pre>
+        </div>
+      </div>
 
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
-          <div className="p-6 bg-white/5 rounded-lg">
-            <p className="text-white/70">No recent activity</p>
-          </div>
-        </section>
+      <div className="profile-section">
+        <h2 className="profile-section-title">Recent Activity</h2>
+        <div className="profile-card">
+          <p className="text-white/70">No recent activity</p>
+        </div>
+      </div>
 
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Statistics</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-6 bg-white/5 rounded-lg">
-              <h3 className="font-medium mb-2">Stories</h3>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-            <div className="p-6 bg-white/5 rounded-lg">
-              <h3 className="font-medium mb-2">Comments</h3>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-            <div className="p-6 bg-white/5 rounded-lg">
-              <h3 className="font-medium mb-2">Likes</h3>
-              <p className="text-2xl font-bold">0</p>
-            </div>
+      <div className="profile-section">
+        <h2 className="profile-section-title">Statistics</h2>
+        <div className="profile-stats">
+          <div className="profile-stat-card">
+            <h3 className="profile-stat-label">Stories</h3>
+            <p className="profile-stat-value">0</p>
           </div>
-        </section>
+          <div className="profile-stat-card">
+            <h3 className="profile-stat-label">Comments</h3>
+            <p className="profile-stat-value">0</p>
+          </div>
+          <div className="profile-stat-card">
+            <h3 className="profile-stat-label">Likes</h3>
+            <p className="profile-stat-value">0</p>
+          </div>
+        </div>
       </div>
     </div>
   )

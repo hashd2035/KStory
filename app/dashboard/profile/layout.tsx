@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { getProfiles, createProfile, Profile } from '@/lib/supabase'
 import { getUser } from '@/lib/supabase'
+import { usePathname } from 'next/navigation'
 
 export default function ProfileLayout({
   children
@@ -11,6 +12,7 @@ export default function ProfileLayout({
 }) {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const pathname = usePathname()
 
   useEffect(() => {
     loadProfiles()
@@ -52,27 +54,27 @@ export default function ProfileLayout({
   }
 
   return (
-    <div className="flex">
+    <div className="profile-layout">
       {/* Profile Sidebar */}
-      <div className="w-64 min-h-screen bg-white/5 p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Profiles</h2>
+      <div className="profile-sidebar">
+        <div className="profile-sidebar-header">
+          <h2 className="profile-sidebar-title">Profiles</h2>
           {profiles.length < 5 && (
             <button
               onClick={handleAddProfile}
-              className="px-2 py-1 bg-white/10 rounded hover:bg-white/20"
+              className="profile-add-button"
             >
               Add
             </button>
           )}
         </div>
 
-        <nav className="space-y-2">
+        <nav className="profile-nav">
           {profiles.map((profile) => (
             <a
               key={profile.id}
               href={`/dashboard/profile/${profile.id}`}
-              className="block px-4 py-2 rounded hover:bg-white/10"
+              className={`profile-nav-link ${pathname?.includes(profile.id) ? 'active' : ''}`}
             >
               {profile.name}
             </a>
@@ -81,7 +83,7 @@ export default function ProfileLayout({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-8">
+      <div className="profile-content">
         {children}
       </div>
     </div>
