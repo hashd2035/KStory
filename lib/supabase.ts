@@ -1,12 +1,23 @@
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@supabase/supabase-js'
 
-export const supabase = createClientComponentClient()
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+export const supabase = createClient(supabaseUrl, supabaseKey)
 
 export interface SignUpData {
   email: string
   password: string
   firstName?: string
   lastName?: string
+}
+
+export interface Profile {
+  id: string
+  name: string
+  user_id: string
+  created_at: string
+  data: any
 }
 
 export async function signUp({ email, password, firstName, lastName }: SignUpData) {
@@ -27,6 +38,12 @@ export async function signUp({ email, password, firstName, lastName }: SignUpDat
     console.error('Signup error:', error)
     throw error
   }
+
+  // Create default profile
+  if (data.user) {
+    await createProfile(data.user.id, 'Default Profile')
+  }
+
   console.log('Signup successful:', data.user?.email)
   return { user: data.user }
 }
@@ -56,7 +73,6 @@ export async function getUser() {
     const { data: { user } } = await supabase.auth.getUser()
     return user
   } catch {
-    // Silently handle auth errors
     return null
   }
 }
@@ -66,7 +82,50 @@ export async function isAuthenticated() {
     const { data: { session } } = await supabase.auth.getSession()
     return !!session
   } catch {
-    // Silently handle auth errors
     return false
   }
+}
+
+// Profile Management Functions
+export async function createProfile(userId: string, name: string) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .insert([
+      { user_id: userId, name, data: {} }
+    ])
+    .select()
+
+  if (error) throw error
+  return data[0]
+}
+
+export async function getProfiles(userId: string) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: true })
+
+  if (error) throw error
+  return data as Profile[]
+}
+
+export async function updateProfile(profileId: string, updates: Partial<Profile>) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('id', profileId)
+    .select()
+
+  if (error) throw error
+  return data[0]
+}
+
+export async function deleteProfile(profileId: string) {
+  const { error } = await supabase
+    .from('profiles')
+    .delete()
+    .eq('id', profileId)
+
+  if (error) throw error
 }
