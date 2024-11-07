@@ -3,10 +3,13 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { isAuthenticated, signOut } from "@/lib/supabase"
+import { usePathname } from "next/navigation"
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const pathname = usePathname()
+  const isDashboard = pathname?.startsWith('/dashboard')
 
   useEffect(() => {
     checkAuth()
@@ -28,6 +31,25 @@ export default function Navbar() {
     }
   }
 
+  const renderNavLinks = () => {
+    if (isDashboard) {
+      return (
+        <>
+          <Link href="/dashboard/profile">Profile</Link>
+          <Link href="/dashboard/admin">Admin</Link>
+          <Link href="/dashboard/account">Account</Link>
+        </>
+      )
+    }
+    return (
+      <>
+        <Link href="/about">About KStory</Link>
+        <Link href="/stories">Stories</Link>
+        <Link href="/podcast">Podcast</Link>
+      </>
+    )
+  }
+
   return (
     <div className="nav-container">
       <Link href="/" className="nav-logo">
@@ -35,9 +57,7 @@ export default function Navbar() {
       </Link>
 
       <div className="nav-links">
-        <Link href="/about">About KStory</Link>
-        <Link href="/stories">Stories</Link>
-        <Link href="/podcast">Podcast</Link>
+        {renderNavLinks()}
       </div>
 
       {!isLoading && (

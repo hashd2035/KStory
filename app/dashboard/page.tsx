@@ -1,109 +1,74 @@
 "use client"
 
-import { getUser, signOut } from '@/lib/supabase'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { User } from '@supabase/supabase-js'
+import { getUser } from '@/lib/supabase'
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    async function loadUser() {
-      try {
-        const userData = await getUser()
-        if (userData) {
-          setUser(userData)
-        } else {
-          // If no user, the middleware will handle the redirect
-          window.location.href = '/auth/login'
-        }
-      } catch (error) {
-        // Silently handle auth errors - middleware will redirect
-        window.location.href = '/auth/login'
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     loadUser()
   }, [])
 
-  const handleSignOut = async () => {
+  const loadUser = async () => {
     try {
-      await signOut()
-      window.location.href = '/'
+      const userData = await getUser()
+      setUser(userData)
     } catch (error) {
-      console.error('Failed to sign out:', error)
-      alert('Failed to sign out. Please try again.')
+      console.error('Error loading user:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black text-white">
-        <div className="max-w-4xl mx-auto p-8 text-center">
-          <div className="animate-pulse">Loading...</div>
-        </div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-black text-white">
-        <div className="max-w-4xl mx-auto p-8 text-center">
-          <div className="animate-pulse">Redirecting to login...</div>
-        </div>
-      </div>
-    )
+    return <div>Loading...</div>
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <main className="max-w-4xl mx-auto p-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Your Profile</h1>
-          <button
-            onClick={handleSignOut}
-            className="px-4 py-2 text-sm border border-white/10 rounded-lg hover:bg-white/5"
-          >
-            Sign Out
-          </button>
-        </div>
+    <div className="max-w-4xl mx-auto p-8">
+      <h1 className="text-2xl font-bold mb-4">Welcome, {user?.user_metadata?.first_name || 'User'}</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        {/* Profile Section */}
+        <Link href="/dashboard/profile" className="block p-6 bg-white/5 rounded-lg hover:bg-white/10">
+          <h2 className="text-xl font-semibold mb-2">Profile</h2>
+          <p className="text-white/70">View and update your profile information</p>
+        </Link>
 
-        <div className="bg-white/5 rounded-lg p-6 space-y-4">
-          <div>
-            <label className="text-sm text-white/50">Email</label>
-            <p className="text-lg">{user.email}</p>
+        {/* Admin Section */}
+        <Link href="/dashboard/admin" className="block p-6 bg-white/5 rounded-lg hover:bg-white/10">
+          <h2 className="text-xl font-semibold mb-2">Admin</h2>
+          <p className="text-white/70">Manage site content and users</p>
+        </Link>
+
+        {/* Account Section */}
+        <Link href="/dashboard/account" className="block p-6 bg-white/5 rounded-lg hover:bg-white/10">
+          <h2 className="text-xl font-semibold mb-2">Account</h2>
+          <p className="text-white/70">Manage your account settings</p>
+        </Link>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="mt-12">
+        <h2 className="text-xl font-semibold mb-4">Quick Stats</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-6 bg-white/5 rounded-lg">
+            <h3 className="text-lg font-medium mb-2">Stories</h3>
+            <p className="text-2xl font-bold">0</p>
           </div>
-
-          {user.user_metadata?.first_name && (
-            <div>
-              <label className="text-sm text-white/50">Name</label>
-              <p className="text-lg">
-                {user.user_metadata.first_name} {user.user_metadata.last_name}
-              </p>
-            </div>
-          )}
-
-          <div>
-            <label className="text-sm text-white/50">Account Created</label>
-            <p className="text-lg">
-              {new Date(user.created_at).toLocaleDateString()}
-            </p>
+          <div className="p-6 bg-white/5 rounded-lg">
+            <h3 className="text-lg font-medium mb-2">Comments</h3>
+            <p className="text-2xl font-bold">0</p>
+          </div>
+          <div className="p-6 bg-white/5 rounded-lg">
+            <h3 className="text-lg font-medium mb-2">Likes</h3>
+            <p className="text-2xl font-bold">0</p>
           </div>
         </div>
-
-        <div className="mt-8">
-          <a 
-            href="/"
-            className="text-sm text-white/70 hover:text-white"
-          >
-            ← Back to Home
-          </a>
-        </div>
-      </main>
+      </div>
     </div>
   )
 }
