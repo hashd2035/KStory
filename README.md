@@ -17,7 +17,13 @@ A modern storytelling platform built with Next.js, Supabase, and TailwindCSS.
 - TailwindCSS
 - TypeScript
 
-## Getting Started
+## Prerequisites
+
+- Node.js 18 or later
+- A Supabase account and project
+- Git
+
+## Development Setup
 
 1. Clone the repository:
 ```bash
@@ -30,11 +36,19 @@ cd kstory
 npm install
 ```
 
-3. Create a `.env.local` file in the root directory with your Supabase credentials:
+3. Set up environment variables:
+```bash
+# Copy the example environment file
+cp .env.example .env.local
+
+# Edit .env.local with your Supabase credentials
 ```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+
+Required environment variables:
+- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+
+You can find these values in your Supabase project settings.
 
 4. Run the development server:
 ```bash
@@ -43,31 +57,44 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Deployment
+## Using Dev Containers
 
-### Vercel Deployment
+This project includes a dev container configuration for VSCode, which provides a consistent development environment with all necessary extensions and tools pre-configured.
 
-1. Push your code to GitHub
-2. Connect your GitHub repository to Vercel
-3. Add your environment variables in Vercel's project settings
-4. Deploy!
+To use it:
 
-### Cloudflare Pages Deployment
+1. Install the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension in VSCode
+2. Open the project in VSCode
+3. Click the green button in the bottom-left corner and select "Reopen in Container"
+4. Wait for the container to build and install dependencies
 
-1. Push your code to GitHub
-2. Connect your GitHub repository to Cloudflare Pages
-3. Set up your build configuration:
-   - Build command: `npm run build`
-   - Build output directory: `.next`
-4. Add your environment variables in Cloudflare's project settings
-5. Deploy!
+The container includes:
+- Node.js 18
+- Git
+- GitHub CLI
+- Essential VSCode extensions for Next.js development
+- Prettier and ESLint configuration
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check code formatting
 
 ## Environment Variables
 
-Make sure to set these environment variables in your deployment platform:
+The project uses several environment variables for configuration. Create a `.env.local` file in the root directory with the following variables:
 
-- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+```
+
+**Important**: Never commit your `.env.local` file. It's already added to `.gitignore`.
 
 ## Project Structure
 
