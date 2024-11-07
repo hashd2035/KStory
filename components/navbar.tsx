@@ -30,35 +30,38 @@ export default function Navbar() {
 
   return (
     <div className="nav-container">
-      {/* Logo */}
       <Link href="/" className="nav-logo">
         KStory
       </Link>
 
-      {/* Navigation Links */}
       <div className="nav-links">
         <Link href="/about">About KStory</Link>
         <Link href="/stories">Stories</Link>
         <Link href="/podcast">Podcast</Link>
       </div>
 
-      {/* Auth Links */}
       {!isLoading && (
         <div className="nav-auth">
           {isLoggedIn ? (
             <>
-              <Link href="/dashboard">Dashboard</Link>
+              <Link href="/dashboard" className="nav-auth-button">
+                Dashboard
+              </Link>
               <button 
                 onClick={handleSignOut}
-                className="text-white hover:text-white/80"
+                className="nav-auth-button"
               >
                 Sign Out
               </button>
             </>
           ) : (
             <>
-              <Link href="/auth/login">Sign In</Link>
-              <Link href="/auth/signup">Sign Up</Link>
+              <Link href="/auth/login" className="nav-auth-button">
+                Sign In
+              </Link>
+              <Link href="/auth/signup" className="nav-auth-button">
+                Sign Up
+              </Link>
             </>
           )}
         </div>
