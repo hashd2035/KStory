@@ -1,12 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-console.log('Supabase URL available:', !!supabaseUrl)
-console.log('Supabase Key available:', !!supabaseKey)
-
-export const supabase = createClient(supabaseUrl, supabaseKey)
+export const supabase = createClientComponentClient()
 
 export interface SignUpData {
   email: string
@@ -24,7 +18,8 @@ export async function signUp({ email, password, firstName, lastName }: SignUpDat
       data: {
         first_name: firstName,
         last_name: lastName
-      }
+      },
+      emailRedirectTo: `${window.location.origin}/auth/callback`
     }
   })
 

@@ -3,29 +3,40 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  // Create a response to modify
-  const res = NextResponse.next()
-  
-  // Create supabase client
-  const supabase = createMiddlewareClient({ req: request, res })
-  
-  // Get session
-  const { data: { session } } = await supabase.auth.getSession()
+  const response = NextResponse.next()
+  const supabase = createMiddlewareClient({ req: request, res: response })
 
-  // Get the current pathname
-  const path = request.nextUrl.pathname
+  // Refresh session if expired - required for Server Components
+  await supabase.auth.getSession()
 
-  // If accessing dashboard without session, redirect to login
-  if (path === '/dashboard') {
+  // Optional: Protect routes that require authentication
+  const protectedPaths = ['/dashboard']
+  const { pathname } = request.nextUrl
+
+  if (protectedPaths.some(path => pathname.startsWith(path))) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+
     if (!session) {
-      return NextResponse.redirect(new URL('/auth/login', request.url))
+      const redirectUrl = new URL('/auth/login', request.url)
+      redirectUrl.searchParams.set('redirectedFrom', pathname)
+      return NextResponse.redirect(redirectUrl)
     }
   }
 
-  // Allow all other routes
-  return res
+  return response
 }
 
 export const config = {
-  matcher: ['/dashboard']
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
 }
