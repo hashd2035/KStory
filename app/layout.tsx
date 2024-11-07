@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/navbar'
+import Navbar from '@/components/navbar'
 import './globals.css'
 
 export const metadata = {
@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-black min-h-screen">
+      <body>
         <Navbar />
         {children}
       </body>
